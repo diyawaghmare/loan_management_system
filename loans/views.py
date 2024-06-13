@@ -18,35 +18,6 @@ class RegisterUser(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class ApplyLoan(APIView):
-#     def post(self, request):
-#         serializer = LoanApplicationSerializer(data=request.data)
-#         if serializer.is_valid():
-#             user_id = serializer.validated_data["user"]
-#             user = User.objects.get(unique_user_id=user_id)
-#             if user.credit_score < 450 or user.annual_income < 150000:
-#                 return Response(
-#                     {"error": "User does not meet the criteria for loan application"},
-#                     status=status.HTTP_400_BAD_REQUEST,
-#                 )
-#             # Validate loan amount based on loan type
-#             loan_amount = serializer.validated_data["loan_amount"]
-#             loan_type = serializer.validated_data["loan_type"]
-#             if (
-#                 (loan_type == "Car" and loan_amount > 750000)
-#                 or (loan_type == "Home" and loan_amount > 8500000)
-#                 or (loan_type == "Education" and loan_amount > 5000000)
-#                 or (loan_type == "Personal" and loan_amount > 1000000)
-#             ):
-#                 return Response(
-#                     {
-#                         "error": "Loan amount exceeds the limit for the selected loan type"
-#                     },
-#                     status=status.HTTP_400_BAD_REQUEST,
-#                 )
-#             loan = serializer.save()
-#             return Response({"loan_id": loan.loan_id}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class ApplyLoan(APIView):
     def post(self, request):
         serializer = LoanApplicationSerializer(data=request.data)

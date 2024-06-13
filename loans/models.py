@@ -4,7 +4,7 @@ import uuid
 
 class User(models.Model):
     unique_user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    aadhar_id = models.CharField(max_length=12, unique=True)
+    aadhar_id = models.CharField(max_length=36, unique=True)
     name = models.CharField(max_length=100)
     email_id = models.EmailField(unique=True)
     annual_income = models.DecimalField(max_digits=10, decimal_places=2)

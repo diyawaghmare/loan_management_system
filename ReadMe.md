@@ -44,20 +44,15 @@ The Loan Management System is a Django-based application that allows users to re
    python manage.py makemigrations
    python manage.py migrate
    ```
-5. **Create and activate a virtual environment:**
-   ```sh
-   git clone https://github.com/your-username/loan-management-system.git
-   cd loan-management-system
-   ```
-6. **Run the server:**
+5. **Run the server:**
    ```sh
    python manage.py runserver
    ```
-7. **Start Redis server using Docker:**
+6. **Start Redis server using Docker:**
    ```sh
    docker run -d -p 6379:6379 redis
    ```
-8. **Start Celery worker:**
+7. **Start Celery worker:**
     ```sh
     celery -A loan_management_system worker --loglevel=info
     ```

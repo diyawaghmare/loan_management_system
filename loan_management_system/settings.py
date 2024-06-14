@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
-    'loans',
+    "rest_framework",
+    "loans",
 ]
 
 MIDDLEWARE = [
@@ -124,9 +124,34 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+CELERY_LOGGER_NAME = "celery"
+CELERY_LOG_LEVEL = "INFO"  # or 'DEBUG' for more detailed logs
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "celery": {
+            "level": "DEBUG",  # or 'INFO'
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "level": "DEBUG",  # or 'INFO'
+            "class": "logging.FileHandler",
+            "filename": "celery.log",
+        },
+    },
+    "loggers": {
+        "celery": {
+            "handlers": ["celery", "file"],
+            "level": "DEBUG",  # or 'INFO'
+            "propagate": True,
+        },
+    },
+}

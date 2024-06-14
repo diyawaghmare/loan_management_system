@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from .models import User, LoanApplication, Payment
 from .serializers import UserSerializer, LoanApplicationSerializer, PaymentSerializer
 from .tasks import calculate_credit_score
+from django.shortcuts import get_object_or_404
+from datetime import datetime
 
 
 class RegisterUser(APIView):
@@ -11,7 +13,9 @@ class RegisterUser(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            calculate_credit_score.delay(user.id)  # Trigger async task
+            calculate_credit_score.delay(
+                user.aadhar_id
+            )  # Using the aadhar_id to trigger async celery task
             return Response(
                 {"unique_user_id": user.unique_user_id}, status=status.HTTP_200_OK
             )
@@ -96,10 +100,31 @@ class GetStatement(APIView):
                     {"error": "Loan is closed"}, status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Calculate past transactions and upcoming EMIs
-            past_transactions = Payment.objects.filter(loan=loan).values(
-                "date", "amount"
+            # Calculate past transactions
+            past_transactions = []
+            payments = Payment.objects.filter(loan=loan).order_by("date")
+            remaining_principal = float(loan.loan_amount)
+            monthly_interest_rate = float(loan.interest_rate) / (12 * 100)
+            emi_amount = (
+                remaining_principal
+                * monthly_interest_rate
+                * ((1 + monthly_interest_rate) ** loan.term_period)
+                / (((1 + monthly_interest_rate) ** loan.term_period) - 1)
             )
+            for payment in payments:
+                interest_for_month = remaining_principal * monthly_interest_rate
+                principal_for_month = emi_amount - interest_for_month
+                remaining_principal -= principal_for_month
+                past_transactions.append(
+                    {
+                        "date": payment.date.strftime("%Y-%m-%d"),
+                        "principal": round(principal_for_month, 2),
+                        "interest": round(interest_for_month, 2),
+                        "amount_paid": round(payment.amount, 2),
+                    }
+                )
+
+            # Calculate upcoming transactions
             upcoming_transactions = loan.emi_dates
 
             return Response(

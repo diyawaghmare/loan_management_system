@@ -99,8 +99,7 @@ The Loan Management System is a Django-based application that allows users to re
       "loan_id": "123e4567-e89b-12d3-a456-426614174000",
       "due_dates": [
         {"date": "2024-07-01", "amount_due": 28410.19},
-        {"date": "2024-08-01", "amount_due": 28410.19},
-        ...
+        {"date": "2024-08-01", "amount_due": 28410.19}
       ]
     }
     ```
@@ -141,12 +140,10 @@ The Loan Management System is a Django-based application that allows users to re
     {
       "error": null,
       "past_transactions": [
-        {"date": "2024-07-01", "principal": 15000, "interest": 5000, "amount_paid": 20000},
-        ...
+        {"date": "2024-07-01", "principal": 15000, "interest": 5000, "amount_paid": 20000},        
       ],
       "upcoming_transactions": [
         {"date": "2024-08-01", "amount_due": 28410.19},
-        ...
       ]
     }
     ```

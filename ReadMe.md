@@ -267,7 +267,7 @@ Use this endpoint to register a new user.
 **Request Body:**
 ```json
 {
-  "aadhar_id": "123456789012",
+  "aadhar_id": "f5abc955-889d-4a17-87b9-45b362eb673b",
   "name": "Alice",
   "email_id": "alice@example.com",
   "annual_income": 700000
@@ -277,7 +277,7 @@ Use this endpoint to register a new user.
 **cURL Command:**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/register-user/ \
--d '{"aadhar_id": "123456789012", "name": "Alice", "email_id": "alice@example.com", "annual_income": 700000}' \
+-d '{"aadhar_id": "f5abc955-889d-4a17-87b9-45b362eb673b", "name": "Alice", "email_id": "alice@example.com", "annual_income": 700000}' \
 -H "Content-Type: application/json"
 ```
 

@@ -166,6 +166,17 @@ This function calculates the Equated Monthly Installment (EMI) and the schedule 
   - `emi_amount` (float): The monthly EMI amount.
   - `emi_dates` (list): A list of dictionaries containing the due dates and amounts of each EMI.
 
+- **Formula for EMI Calculation:**
+
+    The Equated Monthly Installment (EMI) is calculated using the following formula:
+
+    $$EMI = P \times \frac{r(1+r)^n}{(1+r)^n - 1}$$
+
+    Where:
+    - \( P \) is the loan amount (Principal)
+    - \( r \) is the monthly interest rate (annual interest rate divided by 12 and then by 100)
+    - \( n \) is the loan tenure in months
+
 - **Example:**
   ```python
   from datetime import datetime
@@ -194,6 +205,14 @@ This function adjusts the EMI schedule based on payments made by the user, ensur
 
 - **Returns:**
   - `adjusted_emi_dates` (list): The updated list of EMI due dates and amounts after adjusting for the payment.
+
+- **Logic:**
+	1. Apply payment to the current EMI:
+	- If the payment is equal to the EMI due amount, set the EMI amount due to 0 and remove it from the upcoming transactions.
+	- If the payment is more or less than the EMI due amount, set the EMI amount due to 0, remove it from the upcoming transactions, and carry forward the remaining due amount to the next EMI.
+	2. Distribute remaining payment to future EMIs:
+	- If the remaining payment is positive, subtract it from the next EMI due amount.
+	- If the remaining payment is negative, add it to the next EMI due amount, ensuring it does not exceed the max_emi.
 
 - **Example:**
   ```python
@@ -261,16 +280,6 @@ Use this endpoint to register a new user.
 
 **Method:** `POST`
 
-**Request Body:**
-```json
-{
-  "aadhar_id": "f5abc955-889d-4a17-87b9-45b362eb673b",
-  "name": "Alice",
-  "email_id": "alice@example.com",
-  "annual_income": 700000
-}
-```
-
 **cURL Command:**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/register-user/ \
@@ -286,18 +295,6 @@ Use this endpoint to apply for a new loan.
 
 **Method:** `POST`
 
-**Request Body:**
-```json
-{
-  "user": "123456789012",
-  "loan_type": "Car",
-  "loan_amount": 500000,
-  "interest_rate": 15,
-  "term_period": 20,
-  "disbursement_date": "2024-06-14"
-}
-```
-
 **cURL Command:**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/apply-loan/ \
@@ -312,15 +309,6 @@ Use this endpoint to register a payment made towards an EMI.
 **Endpoint:** `/api/make-payment/`
 
 **Method:** `POST`
-
-**Request Body:**
-```json
-{
-  "loan": "3b5da63d-9ebb-4738-8d1a-da28d17c6b7c",
-  "date": "2024-07-01",
-  "amount": 20000
-}
-```
 
 **cURL Command:**
 ```bash

@@ -1,5 +1,27 @@
 # Loan Management System
 
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Setup Instructions](#setup-instructions)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+4. [API Endpoints](#api-endpoints)
+    - [User Registration](#1-user-registration)
+    - [Apply for Loan](#2-apply-for-loan)
+    - [Make Payment](#3-make-payment)
+    - [Get Loan Statement](#4-get-loan-statement)
+5. [Utility Functions](#utility-functions)
+    - [calculate_emi](#calculate_emi)
+    - [payment_handler](#payment_handler)
+    - [calculate_credit_score (Celery task)](#calculate_credit_score-celery-task)
+6. [Usage](#usage)
+    - [Register User](#1-register-user)
+    - [Apply for Loan](#2-apply-for-loan)
+    - [Make Payment](#3-make-payment)
+    - [Get Loan Statement](#4-get-loan-statement)
+
 ## Overview
 
 The Loan Management System is a Django-based application that allows users to register and apply for loans, make payments, and manage their loan accounts. It includes additional features such as credit score calculation and EMI calculation.
@@ -207,12 +229,12 @@ This function adjusts the EMI schedule based on payments made by the user, ensur
   - `adjusted_emi_dates` (list): The updated list of EMI due dates and amounts after adjusting for the payment.
 
 - **Logic:**
-	1. Apply payment to the current EMI:
-	- If the payment is equal to the EMI due amount, set the EMI amount due to 0 and remove it from the upcoming transactions.
-	- If the payment is more or less than the EMI due amount, set the EMI amount due to 0, remove it from the upcoming transactions, and carry forward the remaining due amount to the next EMI.
-	2. Distribute remaining payment to future EMIs:
-	- If the remaining payment is positive, subtract it from the next EMI due amount.
-	- If the remaining payment is negative, add it to the next EMI due amount, ensuring it does not exceed the max_emi.
+    - Apply payment to the current EMI:
+	    - If the payment is equal to the EMI due amount, set the EMI amount due to 0 and remove it from the upcoming transactions.
+	    - If the payment is more or less than the EMI due amount, set the EMI amount due to 0, remove it from the upcoming transactions, and carry forward the remaining due amount to the next EMI.
+	- Distribute remaining payment to future EMIs:
+	    - If the remaining payment is positive, subtract it from the next EMI due amount.
+	    - If the remaining payment is negative, add it to the next EMI due amount, ensuring it does not exceed the max_emi.
 
 - **Example:**
   ```python
